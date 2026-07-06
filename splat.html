@@ -1,0 +1,75 @@
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Roam · 3D Gaussian Splat Showcase</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230E0F12'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='20' fill='%23C8A96A' text-anchor='middle'%3ER%3C/text%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" />
+<link rel="stylesheet" href="./css/styles.css" />
+
+<!-- Isolated engine: three@0.160 (mkkellogg peer dep) — never mixed with the r185 house. -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/",
+    "@mkkellogg/gaussian-splats-3d": "https://cdn.jsdelivr.net/npm/@mkkellogg/gaussian-splats-3d@0.4.7/build/gaussian-splats-3d.module.js"
+  }
+}
+</script>
+
+<style>
+  body { background: #05060a; }
+  .splat-topbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 10;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 26px; pointer-events: none;
+  }
+  .splat-topbar > * { pointer-events: auto; }
+  .splat-card {
+    position: fixed; top: 74px; right: 22px; z-index: 10;
+    width: min(360px, calc(100vw - 44px));
+    background: linear-gradient(180deg, rgba(23,25,31,.94), rgba(19,20,25,.94));
+    border: 1px solid var(--line); border-radius: var(--r-lg);
+    padding: 20px 22px; box-shadow: var(--shadow); backdrop-filter: blur(10px);
+  }
+  .splat-card .tag {
+    display: inline-flex; align-items: center; gap: 8px; font-size: 11px; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 12px;
+  }
+  .splat-card .tag::before { content: "◈"; }
+  .splat-card h3 { font-family: "Fraunces", serif; font-weight: 500; font-size: 18px; margin-bottom: 10px; }
+  .splat-card p { font-size: 12.8px; line-height: 1.62; color: var(--text-lo); }
+  .splat-card .cta { margin-top: 16px; }
+  #splat-loading {
+    position: fixed; inset: 0; z-index: 8;
+    display: flex; align-items: center; justify-content: center; text-align: center;
+    background: radial-gradient(120% 90% at 50% 40%, #0c0e14, #05060a 75%);
+    color: var(--text-lo);
+  }
+  #splat-loading .msg { font-size: 13px; max-width: 42ch; line-height: 1.7; }
+  .hint-controls { position: fixed; bottom: 16px; left: 0; right: 0; text-align: center; z-index: 9;
+    font-size: 12px; color: var(--text-dim); letter-spacing: .03em; pointer-events: none; }
+</style>
+
+<div class="splat-topbar">
+  <div class="brand"><div class="glyph">R</div><div class="name">ROAM<b>·</b>3D</div></div>
+  <div class="seg">
+    <a href="./index.html">Walk</a>
+    <a class="active">Splat</a>
+  </div>
+</div>
+
+<div class="splat-card">
+  <div class="tag">About this 3D scan</div>
+  <h3 id="splat-label">3D Gaussian Splat — Sample Capture</h3>
+  <p id="splat-note">This is a real 3D Gaussian Splat rendered live in your browser — a sample scene, not this listing. A photoreal splat of a specific home needs a dense video walkthrough, camera-pose estimation, and GPU training; it can't come from marketing photos.</p>
+  <a class="btn btn-primary cta" href="./index.html" style="width:100%">← Back to walking the home</a>
+</div>
+
+<div class="hint-controls">Drag to orbit · Scroll to zoom · Right-drag to pan</div>
+
+<div id="splat-loading">
+  <div class="msg">Loading a real Gaussian Splat…<br />first load streams a few MB, please wait a moment.</div>
+</div>
+
+<script type="module" src="./js/splat.js"></script>

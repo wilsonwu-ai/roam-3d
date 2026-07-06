@@ -1,0 +1,156 @@
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Roam · Walk the Listing</title>
+<meta name="description" content="Walk through a real estate listing like a first-person video game — WASD, mouse-look, jump, crouch. Plus a live 3D Gaussian Splat showcase." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230E0F12'/%3E%3Ctext x='16' y='23' font-family='Georgia,serif' font-size='20' fill='%23C8A96A' text-anchor='middle'%3ER%3C/text%3E%3C/svg%3E" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" />
+<link rel="stylesheet" href="./css/styles.css" />
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.185.1/examples/jsm/"
+  }
+}
+</script>
+
+<!-- ==================== 3D canvas + atmosphere ==================== -->
+<div id="app"></div>
+<div id="grain"></div>
+
+<!-- ==================== In-experience HUD ==================== -->
+<div id="hud" class="hidden">
+  <div class="hud-top">
+    <div class="hud-address pe" id="hud-address">—</div>
+    <div class="hud-top-right">
+      <div class="seg pe">
+        <a class="active">Walk</a>
+        <a id="hud-splat-tab">Splat</a>
+      </div>
+      <button class="iconbtn pe" id="help-btn" title="Controls &amp; settings" aria-label="Controls and settings">?</button>
+    </div>
+  </div>
+
+  <div id="crosshair"><span class="ring"></span><span class="dot"></span></div>
+  <div class="inspect-prompt" id="inspect-prompt"><kbd>E</kbd> Inspect photo</div>
+
+  <div class="hud-bl">
+    <div id="room-label">&nbsp;</div>
+    <div id="facts-chip">&nbsp;</div>
+  </div>
+
+  <div class="hud-esc-hint"><kbd>Esc</kbd> menu</div>
+
+  <div id="minimap"><span class="mm-n">N</span><canvas width="156" height="156"></canvas></div>
+
+  <div id="hint" class="hidden"><b>WASD</b> to move &nbsp;·&nbsp; <b>Mouse</b> to look &nbsp;·&nbsp; Space jump &nbsp;·&nbsp; Shift sprint &nbsp;·&nbsp; Esc menu</div>
+</div>
+
+<div id="attrib" class="hidden"></div>
+
+<!-- ==================== Lock-lost resume shade ==================== -->
+<div id="resume" class="hidden">
+  <div class="r-ring">▶</div>
+  <div class="r-title serif">Paused</div>
+  <div class="r-sub">Click anywhere to resume walking</div>
+</div>
+
+<!-- ==================== Landing gate ==================== -->
+<div id="gate">
+  <div class="hero" id="gate-hero"></div>
+  <div class="scrim"></div>
+
+  <div class="gate-top">
+    <div class="brand"><div class="glyph">R</div><div class="name">ROAM<b>·</b>3D</div></div>
+    <div class="seg">
+      <a class="active">Walk</a>
+      <a id="gate-splat-tab">Splat</a>
+    </div>
+  </div>
+
+  <div class="gate-body">
+    <div class="gate-eyebrow">Walkable listing</div>
+    <div class="price serif tnum" id="gate-price">$—</div>
+    <div class="address" id="gate-address">—</div>
+    <div class="facts" id="gate-facts">—</div>
+    <div class="gate-cta-row">
+      <button class="btn btn-primary" id="enter-btn"><span class="play">▶</span> Walk the home</button>
+    </div>
+    <div class="legend-strip">
+      <kbd>W A S D</kbd> move &nbsp;·&nbsp; <kbd>Mouse</kbd> look &nbsp;·&nbsp; <kbd>Space</kbd> jump &nbsp;·&nbsp; <kbd>Shift</kbd> sprint &nbsp;·&nbsp; <kbd>Ctrl</kbd> crouch &nbsp;·&nbsp; <kbd>Esc</kbd> menu
+    </div>
+    <a class="gate-splat-link" id="gate-splat-link">Prefer to look around? Try the 3D Splat showcase →</a>
+  </div>
+</div>
+
+<!-- ==================== Pause / help / settings ==================== -->
+<div id="pause" class="overlay hidden">
+  <div class="card">
+    <h2>Paused</h2>
+
+    <div class="sect-label">Controls</div>
+    <div class="keys">
+      <div class="k"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd></div><div class="d">Move</div>
+      <div class="k"><kbd>Mouse</kbd></div><div class="d">Look around</div>
+      <div class="k"><kbd>Space</kbd></div><div class="d">Jump</div>
+      <div class="k"><kbd>Shift</kbd></div><div class="d">Sprint (hold)</div>
+      <div class="k"><kbd>Ctrl</kbd> / <kbd>C</kbd></div><div class="d">Crouch</div>
+      <div class="k"><kbd>E</kbd> / <kbd>Click</kbd></div><div class="d">Inspect photo</div>
+      <div class="k"><kbd>M</kbd></div><div class="d">Toggle minimap</div>
+      <div class="k"><kbd>Esc</kbd></div><div class="d">This menu</div>
+    </div>
+
+    <div class="sect-label">Settings</div>
+    <div class="setting"><span class="lab">Mouse sensitivity</span><input type="range" id="set-sens" min="0.3" max="3" step="0.1" /><span class="val" id="sens-val">1.0×</span></div>
+    <div class="setting"><span class="lab">Field of view</span><input type="range" id="set-fov" min="60" max="100" step="1" /><span class="val" id="fov-val">75°</span></div>
+    <div class="setting"><span class="lab">Invert Y-axis</span><div class="toggle" id="set-invert" role="switch"></div></div>
+    <div class="setting"><span class="lab">Sprint</span>
+      <div class="pill-group" id="set-sprint">
+        <button data-v="hold">Hold</button><button data-v="toggle">Toggle</button>
+      </div>
+    </div>
+    <div class="setting"><span class="lab">Reduce motion</span><div class="toggle" id="set-motion" role="switch"></div></div>
+    <div class="setting"><span class="lab">Crosshair</span><div class="toggle" id="set-crosshair" role="switch"></div></div>
+
+    <div class="card-actions">
+      <button class="btn btn-primary" id="resume-btn">Resume walking</button>
+      <button class="btn" id="exit-btn">Exit to start</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== Mobile gate ==================== -->
+<div id="mobile-gate" class="hidden">
+  <div class="brand"><div class="glyph">R</div><div class="name">ROAM<b>·</b>3D</div></div>
+  <h1 class="serif">This walkthrough is best on a desktop</h1>
+  <p>Use a computer with a mouse and keyboard for the full walk-the-home experience.</p>
+  <button class="btn btn-primary" id="mobile-tour-btn">Explore the photo tour</button>
+  <a class="gate-splat-link" id="mobile-splat-link">Your phone can still view the 3D splat →</a>
+</div>
+
+<!-- ==================== Photo tour (mobile fallback) ==================== -->
+<div id="photo-tour" class="hidden">
+  <div class="pt-top">
+    <div class="pt-title serif">Photo Tour</div>
+    <button class="iconbtn" id="pt-close" aria-label="Close">✕</button>
+  </div>
+  <div class="pt-stage"><img id="pt-img" alt="" /><div class="pt-cap" id="pt-cap"></div></div>
+  <div class="pt-nav">
+    <button class="btn" id="pt-prev">← Prev</button>
+    <span id="pt-count" style="font-size:13px;color:var(--text-lo)"></span>
+    <button class="btn" id="pt-next">Next →</button>
+  </div>
+</div>
+
+<!-- ==================== Loading ==================== -->
+<div id="loading">
+  <div class="mark">ROAM · 3D</div>
+  <div class="bar"><i id="load-bar"></i></div>
+  <div class="msg" id="load-msg">Preparing your walkthrough…</div>
+</div>
+
+<script type="module" src="./main.js"></script>
