@@ -8,6 +8,7 @@ import * as THREE from 'three';
 
 const FLOOR_MAT = {
   hardwood_oak: { color: 0x9c6b3f, roughness: 0.55 },
+  hardwood_light: { color: 0xc9a878, roughness: 0.5 },
   lvp_greywash: { color: 0xa29e95, roughness: 0.6 },
   carpet_beige: { color: 0xc3b7a3, roughness: 0.95 },
   tile_ceramic: { color: 0xdcd7ce, roughness: 0.25 },
@@ -99,24 +100,44 @@ export function buildWorld(listing) {
   }
 
   // ---- Door/opening gaps per line ----------------------------------------
+  // Explicit `openings` are honored; any `connections` pair without an explicit
+  // opening auto-derives a centered doorway on the shared wall (wide shared
+  // walls → open-concept cased openings). Author only needs `connections`.
   const vGaps = new Map(); // x → [[z0,z1]]
   const hGaps = new Map(); // z → [[x0,x1]]
   const byId = new Map(rooms.map((r) => [r.id, r]));
-  for (const op of listing.openings || []) {
-    const A = byId.get(op.between[0]), B = byId.get(op.between[1]);
-    if (!A || !B) continue;
+  const doneEdges = new Set();
+  const edgeKey = (a, b) => [a, b].sort().join('|');
+
+  function addGap(A, B, width, center) {
     const e = sharedEdge(A, B);
-    if (!e) { console.warn(`[roam] no shared wall for opening ${op.between.join(' ↔ ')}`); continue; }
-    const w = op.width || 0.95;
-    const mid = op.center != null
-      ? (e.axis === 'v' ? op.center.z : op.center.x)
-      : (e.span[0] + e.span[1]) / 2;
-    let g0 = mid - w / 2, g1 = mid + w / 2;
-    g0 = Math.max(g0, e.span[0]); g1 = Math.min(g1, e.span[1]);
+    if (!e) { console.warn(`[roam] no shared wall between "${A.id}" and "${B.id}"`); return; }
+    const span = e.span[1] - e.span[0];
+    let w = width != null ? width : Math.min(Math.max(span * 0.6, 0.95), 2.4);
+    w = Math.min(w, span - 0.15);
+    if (w <= 0) return;
+    const mid = center != null ? (e.axis === 'v' ? center.z : center.x) : (e.span[0] + e.span[1]) / 2;
+    const g0 = Math.max(mid - w / 2, e.span[0]);
+    const g1 = Math.min(mid + w / 2, e.span[1]);
     const map = e.axis === 'v' ? vGaps : hGaps;
     const k = r3(e.line);
     if (!map.has(k)) map.set(k, []);
     map.get(k).push([g0, g1]);
+  }
+
+  for (const op of listing.openings || []) {
+    const A = byId.get(op.between[0]), B = byId.get(op.between[1]);
+    if (!A || !B) continue;
+    addGap(A, B, op.width, op.center);
+    doneEdges.add(edgeKey(op.between[0], op.between[1]));
+  }
+  for (const r of rooms) {
+    for (const cid of (r.connections || [])) {
+      const key = edgeKey(r.id, cid);
+      if (doneEdges.has(key) || !byId.has(cid)) continue;
+      addGap(r, byId.get(cid));
+      doneEdges.add(key);
+    }
   }
 
   // ---- Emit wall segments (openings are full-height cased openings) -------
