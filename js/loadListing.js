@@ -9,10 +9,11 @@ export function validateListing(listing) {
   const rooms = listing.rooms || [];
   const issues = [];
 
-  // 1) No two rooms may overlap in BOTH x and z.
+  // 1) No two rooms ON THE SAME FLOOR may overlap in BOTH x and z.
   for (let i = 0; i < rooms.length; i++) {
     for (let j = i + 1; j < rooms.length; j++) {
       const A = rooms[i], B = rooms[j];
+      if ((A.floor || 'main') !== (B.floor || 'main')) continue; // different levels never collide
       const ox = overlaps1D(A.x, A.x + A.width, B.x, B.x + B.width);
       const oz = overlaps1D(A.z, A.z + A.depth, B.z, B.z + B.depth);
       if (ox && oz) issues.push(`Rooms overlap: "${A.id}" ✕ "${B.id}"`);

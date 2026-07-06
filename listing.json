@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "1.0",
+  "schemaVersion": "2.0",
   "units": "meters",
   "axis": { "up": "y", "east": "+x", "south": "+z" },
   "address": "141 Gardiner Rd, Quincy, MA 02169",
@@ -9,98 +9,167 @@
   "sqft": 4066,
   "yearBuilt": 1991,
   "heroImage": "./assets/rooms/zphoto-01.jpg",
-  "description": "Young contemporary colonial on one of Quincy's most coveted streets. This one-of-a-kind stucco home offers over 4,000 sqft of living space with a two-story foyer, formal living room with a stone fireplace, dining room, family room with a 2nd stone fireplace and double sliders to the exterior deck, half bath, first-floor laundry, and a spacious custom kitchen with oak cabinets, stainless appliances, granite counters and a breakfast bar. Close to E. Milton Square with easy highway access.",
+  "description": "Young contemporary colonial on one of Quincy's most coveted streets. This one-of-a-kind stucco home offers over 4,000 sqft across three levels: a two-story foyer, formal living room with a stone fireplace, dining room, family room with a 2nd stone fireplace and double sliders to the deck, custom oak-and-granite kitchen with a breakfast bar, three bedrooms and spa baths upstairs, and a finished lower level with a wet bar. Close to E. Milton Square with easy highway access.",
   "sourceUrl": "https://www.zillow.com/homedetails/141-Gardiner-Rd-Quincy-MA-02169/56594809_zpid/",
-  "attribution": "Photos © the listing agent / MLS (MLS #73518178). Personal, non-commercial proof-of-concept; the floor plan is a simplified single-level representation of a two-story home. Not affiliated with Zillow.",
+  "attribution": "Photos © the listing agent / MLS (MLS #73518178). Personal, non-commercial proof-of-concept; the floor plan is a simplified three-level representation. Not affiliated with Zillow.",
   "defaults": { "ceilingHeight": 2.7, "wallThickness": 0.12, "doorWidth": 0.95, "doorHeight": 2.05, "eyeHeight": 1.6 },
-  "spawn": { "room": "foyer", "facing": "west" },
+  "spawn": { "room": "foyer", "facing": "north" },
+
+  "floors": [
+    { "id": "basement", "name": "Lower Level", "elevation": -3.0 },
+    { "id": "main", "name": "Main", "elevation": 0 },
+    { "id": "upper", "name": "Upper", "elevation": 3.2 }
+  ],
+
+  "stairs": [
+    { "id": "stairs-up", "footprint": { "x": 6, "z": 6, "width": 4, "depth": 5 }, "highEdge": "north", "elevHigh": 3.2, "elevLow": 0 },
+    { "id": "stairs-dn", "footprint": { "x": 10, "z": 6, "width": 6, "depth": 5 }, "highEdge": "north", "elevHigh": 0, "elevLow": -3.0 }
+  ],
+
   "rooms": [
-    { "id": "primary-bedroom", "name": "Primary Bedroom", "type": "bedroom",
-      "width": 6.0, "depth": 5.0, "height": 2.7, "x": 0.0, "z": 0.0,
-      "floorMaterial": "carpet_beige", "wallColor": "#E8E2D6",
-      "photos": [ { "url": "./assets/rooms/zphoto-16.jpg", "wall": "north", "caption": "Primary bedroom with private balcony" } ],
-      "connections": ["hall", "primary-bath"] },
+    { "id": "living", "name": "Formal Living Room", "type": "living", "floor": "main",
+      "width": 8.0, "depth": 6.0, "height": 3.2, "x": 0.0, "z": 0.0,
+      "floorMaterial": "hardwood_light", "wallColor": "#EFECE4",
+      "photos": [
+        { "url": "./assets/rooms/zphoto-03.jpg", "wall": "west", "caption": "Formal living room with stone fireplace" },
+        { "url": "./assets/rooms/zphoto-13.jpg", "wall": "north", "caption": "Family room with 2nd stone fireplace and deck sliders" }
+      ],
+      "connections": ["kitchen", "hall-main"] },
 
-    { "id": "primary-bath", "name": "Primary Bath", "type": "bathroom",
-      "width": 3.4, "depth": 5.0, "height": 2.7, "x": 6.0, "z": 0.0,
-      "floorMaterial": "tile_marble", "wallColor": "#EFEFEA",
-      "photos": [ { "url": "./assets/rooms/zphoto-19.jpg", "wall": "north", "caption": "Spa bath with jacuzzi tub and double vanity" } ],
-      "connections": ["primary-bedroom"] },
+    { "id": "kitchen", "name": "Kitchen", "type": "kitchen", "floor": "main",
+      "width": 8.0, "depth": 6.0, "height": 2.7, "x": 8.0, "z": 0.0,
+      "floorMaterial": "tile_ceramic", "wallColor": "#F1EFE9",
+      "photos": [
+        { "url": "./assets/rooms/zphoto-09.jpg", "wall": "north", "caption": "Custom oak and granite kitchen with island" },
+        { "url": "./assets/rooms/zphoto-10.jpg", "wall": "east", "caption": "Breakfast bar and stainless appliances" }
+      ],
+      "connections": ["living", "stairdn-main"] },
 
-    { "id": "bedroom-2", "name": "Bedroom 2", "type": "bedroom",
-      "width": 4.4, "depth": 5.0, "height": 2.7, "x": 9.4, "z": 0.0,
-      "floorMaterial": "hardwood_light", "wallColor": "#E6E9E4",
-      "photos": [ { "url": "./assets/rooms/zphoto-23.jpg", "wall": "north", "caption": "Sun-filled bedroom" } ],
-      "connections": ["hall"] },
-
-    { "id": "full-bath", "name": "Full Bath", "type": "bathroom",
-      "width": 2.6, "depth": 5.0, "height": 2.7, "x": 13.8, "z": 0.0,
-      "floorMaterial": "tile_ceramic", "wallColor": "#EDEDE8",
-      "photos": [ { "url": "./assets/rooms/zphoto-25.jpg", "wall": "north", "caption": "Full bath with glass shower" } ],
-      "connections": ["hall"] },
-
-    { "id": "bedroom-3", "name": "Bedroom 3", "type": "bedroom",
-      "width": 4.4, "depth": 5.0, "height": 2.7, "x": 16.4, "z": 0.0,
-      "floorMaterial": "hardwood_light", "wallColor": "#E9E4DC",
-      "photos": [ { "url": "./assets/rooms/zphoto-24.jpg", "wall": "north", "caption": "Third bedroom" } ],
-      "connections": ["hall"] },
-
-    { "id": "half-bath", "name": "Half Bath", "type": "bathroom",
-      "width": 2.0, "depth": 5.0, "height": 2.7, "x": 20.8, "z": 0.0,
-      "floorMaterial": "tile_ceramic", "wallColor": "#EDEDE8",
-      "photos": [ { "url": "./assets/rooms/zphoto-14.jpg", "wall": "north", "caption": "Half bath" } ],
-      "connections": ["hall"] },
-
-    { "id": "hall", "name": "Gallery Hall", "type": "hall",
-      "width": 22.8, "depth": 1.4, "height": 2.7, "x": 0.0, "z": 5.0,
+    { "id": "hall-main", "name": "Main Hall", "type": "hall", "floor": "main",
+      "width": 6.0, "depth": 5.0, "height": 2.7, "x": 0.0, "z": 6.0,
       "floorMaterial": "hardwood_light", "wallColor": "#ECEAE3",
       "photos": [],
-      "connections": ["primary-bedroom", "bedroom-2", "full-bath", "bedroom-3", "half-bath", "formal-living", "family-room", "kitchen", "foyer"] },
+      "connections": ["living", "foyer"] },
 
-    { "id": "formal-living", "name": "Formal Living Room", "type": "living",
-      "width": 6.0, "depth": 5.0, "height": 3.2, "x": 0.0, "z": 6.4,
-      "floorMaterial": "hardwood_light", "wallColor": "#EFECE4",
-      "photos": [ { "url": "./assets/rooms/zphoto-03.jpg", "wall": "west", "caption": "Formal living room with stone fireplace" } ],
-      "connections": ["hall", "family-room", "rec-room"] },
+    { "id": "stairup-main", "name": "Staircase", "type": "hall", "floor": "main",
+      "width": 4.0, "depth": 5.0, "height": 3.2, "x": 6.0, "z": 6.0,
+      "floorMaterial": "hardwood_light", "wallColor": "#ECEAE3", "openToAbove": true,
+      "photos": [],
+      "connections": ["dining", "stairup-upper"] },
 
-    { "id": "family-room", "name": "Family Room", "type": "living",
-      "width": 6.4, "depth": 5.0, "height": 3.2, "x": 6.0, "z": 6.4,
-      "floorMaterial": "hardwood_light", "wallColor": "#EDE9E0",
-      "photos": [ { "url": "./assets/rooms/zphoto-13.jpg", "wall": "north", "caption": "Family room with 2nd stone fireplace and deck sliders", "offsetX": -1.8 } ],
-      "connections": ["hall", "formal-living", "kitchen", "rec-room", "dining"] },
+    { "id": "stairdn-main", "name": "Lower Stairs", "type": "hall", "floor": "main",
+      "width": 6.0, "depth": 5.0, "height": 2.7, "x": 10.0, "z": 6.0,
+      "floorMaterial": "hardwood_light", "wallColor": "#ECEAE3", "openToBelow": true,
+      "photos": [],
+      "connections": ["kitchen", "stairdn-basement"] },
 
-    { "id": "kitchen", "name": "Kitchen", "type": "kitchen",
-      "width": 5.4, "depth": 5.0, "height": 2.7, "x": 12.4, "z": 6.4,
-      "floorMaterial": "tile_ceramic", "wallColor": "#F1EFE9",
-      "photos": [ { "url": "./assets/rooms/zphoto-09.jpg", "wall": "north", "caption": "Custom oak and granite kitchen with island", "offsetX": -1.9 } ],
-      "connections": ["hall", "family-room", "foyer", "dining", "breakfast-nook"] },
-
-    { "id": "foyer", "name": "Two-Story Foyer", "type": "entry",
-      "width": 5.0, "depth": 5.0, "height": 3.2, "x": 17.8, "z": 6.4,
+    { "id": "foyer", "name": "Two-Story Foyer", "type": "entry", "floor": "main",
+      "width": 6.0, "depth": 3.0, "height": 3.2, "x": 0.0, "z": 11.0,
       "floorMaterial": "tile_marble", "wallColor": "#ECEAE3",
-      "photos": [ { "url": "./assets/rooms/zphoto-05.jpg", "wall": "east", "caption": "Two-story foyer and staircase" } ],
-      "connections": ["hall", "kitchen", "breakfast-nook"] },
+      "photos": [ { "url": "./assets/rooms/zphoto-05.jpg", "wall": "west", "caption": "Two-story foyer and staircase" } ],
+      "connections": ["hall-main", "dining"] },
 
-    { "id": "rec-room", "name": "Rec Room", "type": "living",
-      "width": 8.4, "depth": 5.1, "height": 2.6, "x": 0.0, "z": 11.4,
-      "floorMaterial": "hardwood_light", "wallColor": "#EAE6DC",
-      "photos": [
-        { "url": "./assets/rooms/zphoto-26.jpg", "wall": "south", "caption": "Finished level with wet bar" },
-        { "url": "./assets/rooms/zphoto-28.jpg", "wall": "west", "caption": "Rec / bonus room" }
-      ],
-      "connections": ["formal-living", "family-room", "dining"] },
-
-    { "id": "dining", "name": "Dining Room", "type": "dining",
-      "width": 6.0, "depth": 5.1, "height": 2.7, "x": 8.4, "z": 11.4,
+    { "id": "dining", "name": "Dining Room", "type": "dining", "floor": "main",
+      "width": 4.5, "depth": 3.0, "height": 2.7, "x": 6.0, "z": 11.0,
       "floorMaterial": "hardwood_light", "wallColor": "#EFECE4",
       "photos": [ { "url": "./assets/rooms/zphoto-06.jpg", "wall": "south", "caption": "Formal dining" } ],
-      "connections": ["rec-room", "family-room", "kitchen", "breakfast-nook"] },
+      "connections": ["foyer", "stairup-main", "nook"] },
 
-    { "id": "breakfast-nook", "name": "Breakfast Nook", "type": "dining",
-      "width": 8.4, "depth": 5.1, "height": 2.7, "x": 14.4, "z": 11.4,
+    { "id": "nook", "name": "Breakfast Nook", "type": "dining", "floor": "main",
+      "width": 3.0, "depth": 3.0, "height": 2.7, "x": 10.5, "z": 11.0,
       "floorMaterial": "hardwood_light", "wallColor": "#EDE9E0",
       "photos": [ { "url": "./assets/rooms/zphoto-11.jpg", "wall": "south", "caption": "Bay-window breakfast nook" } ],
-      "connections": ["dining", "kitchen", "foyer"] }
+      "connections": ["dining", "half-bath"] },
+
+    { "id": "half-bath", "name": "Half Bath", "type": "bathroom", "floor": "main",
+      "width": 2.5, "depth": 3.0, "height": 2.7, "x": 13.5, "z": 11.0,
+      "floorMaterial": "tile_ceramic", "wallColor": "#EDEDE8",
+      "photos": [ { "url": "./assets/rooms/zphoto-14.jpg", "wall": "south", "caption": "Half bath" } ],
+      "connections": ["nook"] },
+
+    { "id": "primary-bedroom", "name": "Primary Bedroom", "type": "bedroom", "floor": "upper",
+      "width": 6.0, "depth": 6.0, "height": 2.7, "x": 0.0, "z": 0.0,
+      "floorMaterial": "carpet_beige", "wallColor": "#E8E2D6",
+      "photos": [
+        { "url": "./assets/rooms/zphoto-16.jpg", "wall": "north", "caption": "Primary bedroom with private balcony" },
+        { "url": "./assets/rooms/zphoto-17.jpg", "wall": "west", "caption": "Primary suite" }
+      ],
+      "connections": ["upper-hall", "primary-bath"] },
+
+    { "id": "upper-hall", "name": "Upstairs Landing", "type": "hall", "floor": "upper",
+      "width": 4.0, "depth": 6.0, "height": 2.7, "x": 6.0, "z": 0.0,
+      "floorMaterial": "hardwood_light", "wallColor": "#ECEAE3",
+      "photos": [ { "url": "./assets/rooms/zphoto-15.jpg", "wall": "north", "caption": "Gallery landing" } ],
+      "connections": ["primary-bedroom", "bedroom-2", "stairup-upper"] },
+
+    { "id": "bedroom-2", "name": "Bedroom 2", "type": "bedroom", "floor": "upper",
+      "width": 6.0, "depth": 6.0, "height": 2.7, "x": 10.0, "z": 0.0,
+      "floorMaterial": "hardwood_light", "wallColor": "#E6E9E4",
+      "photos": [ { "url": "./assets/rooms/zphoto-23.jpg", "wall": "north", "caption": "Sun-filled bedroom" } ],
+      "connections": ["upper-hall", "bedroom-3"] },
+
+    { "id": "primary-bath", "name": "Primary Bath", "type": "bathroom", "floor": "upper",
+      "width": 6.0, "depth": 5.0, "height": 2.7, "x": 0.0, "z": 6.0,
+      "floorMaterial": "tile_marble", "wallColor": "#EFEFEA",
+      "photos": [ { "url": "./assets/rooms/zphoto-19.jpg", "wall": "west", "caption": "Spa bath with jacuzzi tub" } ],
+      "connections": ["primary-bedroom", "full-bath"] },
+
+    { "id": "stairup-upper", "name": "Stair Landing", "type": "hall", "floor": "upper",
+      "width": 4.0, "depth": 5.0, "height": 2.7, "x": 6.0, "z": 6.0,
+      "floorMaterial": "hardwood_light", "wallColor": "#ECEAE3", "openToBelow": true,
+      "photos": [],
+      "connections": ["upper-hall", "upper-landing", "stairup-main"] },
+
+    { "id": "bedroom-3", "name": "Bedroom 3", "type": "bedroom", "floor": "upper",
+      "width": 6.0, "depth": 5.0, "height": 2.7, "x": 10.0, "z": 6.0,
+      "floorMaterial": "hardwood_light", "wallColor": "#E9E4DC",
+      "photos": [ { "url": "./assets/rooms/zphoto-24.jpg", "wall": "east", "caption": "Third bedroom" } ],
+      "connections": ["bedroom-2", "loft"] },
+
+    { "id": "full-bath", "name": "Full Bath", "type": "bathroom", "floor": "upper",
+      "width": 6.0, "depth": 3.0, "height": 2.7, "x": 0.0, "z": 11.0,
+      "floorMaterial": "tile_ceramic", "wallColor": "#EDEDE8",
+      "photos": [ { "url": "./assets/rooms/zphoto-25.jpg", "wall": "south", "caption": "Full bath with glass shower" } ],
+      "connections": ["primary-bath", "upper-landing"] },
+
+    { "id": "upper-landing", "name": "Hall", "type": "hall", "floor": "upper",
+      "width": 4.0, "depth": 3.0, "height": 2.7, "x": 6.0, "z": 11.0,
+      "floorMaterial": "hardwood_light", "wallColor": "#ECEAE3",
+      "photos": [],
+      "connections": ["stairup-upper", "full-bath", "loft"] },
+
+    { "id": "loft", "name": "Loft / Office", "type": "office", "floor": "upper",
+      "width": 6.0, "depth": 3.0, "height": 2.7, "x": 10.0, "z": 11.0,
+      "floorMaterial": "hardwood_light", "wallColor": "#E9E4DC",
+      "photos": [ { "url": "./assets/rooms/zphoto-30.jpg", "wall": "south", "caption": "Bonus room" } ],
+      "connections": ["bedroom-3", "upper-landing"] },
+
+    { "id": "rec-room", "name": "Rec Room", "type": "living", "floor": "basement",
+      "width": 10.0, "depth": 14.0, "height": 2.6, "x": 0.0, "z": 0.0,
+      "floorMaterial": "hardwood_light", "wallColor": "#EAE6DC",
+      "photos": [
+        { "url": "./assets/rooms/zphoto-26.jpg", "wall": "west", "caption": "Finished lower level with wet bar" },
+        { "url": "./assets/rooms/zphoto-28.jpg", "wall": "south", "caption": "Rec room" }
+      ],
+      "connections": ["storage", "bonus-room"] },
+
+    { "id": "storage", "name": "Storage", "type": "closet", "floor": "basement",
+      "width": 6.0, "depth": 6.0, "height": 2.6, "x": 10.0, "z": 0.0,
+      "floorMaterial": "concrete", "wallColor": "#E4E2DA",
+      "photos": [ { "url": "./assets/rooms/zphoto-27.jpg", "wall": "north", "caption": "Lower level" } ],
+      "connections": ["rec-room"] },
+
+    { "id": "stairdn-basement", "name": "Lower Landing", "type": "hall", "floor": "basement",
+      "width": 6.0, "depth": 5.0, "height": 2.6, "x": 10.0, "z": 6.0,
+      "floorMaterial": "concrete", "wallColor": "#E4E2DA", "openToAbove": true,
+      "photos": [],
+      "connections": ["bonus-room", "stairdn-main"] },
+
+    { "id": "bonus-room", "name": "Bonus Room", "type": "living", "floor": "basement",
+      "width": 6.0, "depth": 3.0, "height": 2.6, "x": 10.0, "z": 11.0,
+      "floorMaterial": "hardwood_light", "wallColor": "#EAE6DC",
+      "photos": [ { "url": "./assets/rooms/zphoto-29.jpg", "wall": "south", "caption": "Bonus room / bar" } ],
+      "connections": ["rec-room", "stairdn-basement"] }
   ],
   "openings": [],
   "splat": {

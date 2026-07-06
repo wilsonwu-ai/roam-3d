@@ -17,7 +17,7 @@ takes the honest, shippable version of that idea and makes it real today.
 
 | Mode | What you get |
 |------|--------------|
-| **Walk** (`index.html`) | A data-driven, procedurally-built house you explore in first person. WASD move · mouse look · Space jump · Shift sprint · Ctrl/C crouch · wall collision · minimap · room labels · click a photo to inspect. |
+| **Walk** (`index.html`) | A data-driven, procedurally-built house you explore in first person across **all three floors** — walk the **ramp staircases** between the lower level, main floor, and upstairs. WASD move · mouse look · Space jump · Shift sprint · Ctrl/C crouch · wall collision · floor-aware minimap + badge · room labels · click a photo to inspect. |
 | **Splat** (`splat.html`) | A **real** 3D Gaussian Splat rendered live in your browser — a sample scene, honestly labeled (see below). |
 
 ### Controls
@@ -75,11 +75,17 @@ Three) can't conflict.
 `listing.json` is the **single source of truth**. Swapping in a real Zillow
 listing is a data-and-images change only — **zero code**.
 
+The world is **multi-floor**: each room declares a `floor`, floors have an
+`elevation`, and `stairs` define walkable ramps between them. Stairwell cells use
+`openToAbove` / `openToBelow` to leave a vertical shaft; the player walks the ramp
+(a tilted collider with decorative treads) between levels. Cross-floor
+`connections` keep the graph connected without cutting a horizontal doorway.
+
 ```
-listing.json ──► buildWorld.js ──► floors + walls (doorway gaps) + ceilings
-                                    ├─ visible meshes
-                                    ├─ Octree collision (walls only, no photo panels)
-                                    └─ room zones (HUD label + minimap)
+listing.json ──► buildWorld.js ──► per-floor walls (doorway gaps) + slabs + ceilings
+                                    ├─ visible meshes (offset by floor elevation)
+                                    ├─ Octree collision (walls + slabs + ramps)
+                                    └─ room zones w/ floor (HUD label + floor-aware minimap)
               └► photoPanels.js ──► aspect-correct, unlit, SRGB photo panels (decor)
 ```
 

@@ -28,9 +28,9 @@ export function createPlayer({ octree, camera }) {
   let currentH = STAND_H;
   let wantCrouch = false;
 
-  function spawnAt(x, z) {
-    collider.start.set(x, RADIUS, z);
-    collider.end.set(x, STAND_H, z);
+  function spawnAt(x, z, yBase = 0) {
+    collider.start.set(x, yBase + RADIUS, z);
+    collider.end.set(x, yBase + STAND_H, z);
     velocity.set(0, 0, 0);
     currentH = STAND_H;
     onFloor = false;

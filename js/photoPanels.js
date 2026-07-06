@@ -33,11 +33,12 @@ function placeholderTexture(title, sub) {
   return tex;
 }
 
-export function createPhotoPanels(rooms) {
+export function createPhotoPanels(rooms, elevMap = {}, defaultFloor = 'main') {
   const group = new THREE.Group();
   const targets = []; // interactable image planes (for raycast inspect)
 
   for (const room of rooms) {
+    const elev = elevMap[room.floor || defaultFloor] || 0;
     for (const photo of (room.photos || [])) {
       const g = new THREE.Group();
       const maxH = Math.min(1.7, (room.height || 2.6) - 0.6);
@@ -78,7 +79,7 @@ export function createPhotoPanels(rooms) {
 
       // Place + orient onto the tagged wall (room x,z = NW corner).
       const cx = room.x + room.width / 2, cz = room.z + room.depth / 2;
-      const y = Math.min(1.45, (room.height || 2.6) / 2 + 0.15);
+      const y = elev + Math.min(1.45, (room.height || 2.6) / 2 + 0.15);
       const inset = 0.07;
       const off = photo.offsetX || 0;
       switch (photo.wall) {

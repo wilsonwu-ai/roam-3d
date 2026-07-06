@@ -59,19 +59,20 @@ async function boot() {
 
   // --- world ---
   ui.setLoadProgress(0.5); ui.setLoadMsg('Building the home…');
-  const { collisionGroup, roomZones, bounds, spawn } = buildWorld(listing);
+  const { collisionGroup, decorGroup, roomZones, bounds, spawn, floors, elevMap, defaultFloor } = buildWorld(listing);
   scene.add(collisionGroup);
+  scene.add(decorGroup);
   const worldOctree = new Octree();
   worldOctree.fromGraphNode(collisionGroup);
 
   ui.setLoadProgress(0.8); ui.setLoadMsg('Hanging the photos…');
-  const panels = createPhotoPanels(listing.rooms || []);
+  const panels = createPhotoPanels(listing.rooms || [], elevMap, defaultFloor);
   scene.add(panels.group);
   const targets = panels.targets;
 
   // --- player / controls / hud ---
   player = createPlayer({ octree: worldOctree, camera });
-  player.spawnAt(spawn.x, spawn.z);
+  player.spawnAt(spawn.x, spawn.z, spawn.elevation);
 
   controls = createControls({
     camera, domElement: renderer.domElement, settings,
@@ -79,7 +80,7 @@ async function boot() {
   });
   controls.setYaw(spawn.yaw);
 
-  hud = createHUD({ listing, roomZones, bounds });
+  hud = createHUD({ listing, roomZones, bounds, floors });
   applyFov(settings.fov);
   applyCrosshair(settings.crosshair);
 
@@ -90,7 +91,7 @@ async function boot() {
   // Lightweight debug hook (harmless; aids QA + future debugging).
   window.__roam = {
     get state() { return state; },
-    scene, camera, player, controls, octree: worldOctree, targets, spawn, bounds,
+    scene, camera, player, controls, octree: worldOctree, targets, spawn, bounds, floors, elevMap,
     wallCount: collisionGroup.children.length,
   };
 
@@ -151,7 +152,7 @@ async function boot() {
   function resume() { ui.hideResume(); ui.closePause(); state = 'walk'; controls.lock(); }
   function exit() {
     state = 'gate'; controls.unlock(); controls.resetKeys(); ui.hideResume();
-    player.spawnAt(spawn.x, spawn.z); controls.setYaw(spawn.yaw);
+    player.spawnAt(spawn.x, spawn.z, spawn.elevation); controls.setYaw(spawn.yaw);
     ui.toGate();
   }
   function onLock() {

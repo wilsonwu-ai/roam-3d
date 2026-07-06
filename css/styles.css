@@ -241,6 +241,13 @@ kbd {
 
 /* bottom-left room label + facts */
 .hud-bl { position: absolute; left: 26px; bottom: 22px; }
+#floor-badge {
+  display: inline-block; margin-bottom: 8px;
+  font-size: 10.5px; letter-spacing: .18em; text-transform: uppercase;
+  color: #221c0e; background: linear-gradient(180deg, var(--accent-hi), var(--accent));
+  padding: 3px 10px; border-radius: 6px; font-weight: 600;
+  box-shadow: 0 2px 12px rgba(0,0,0,.4);
+}
 #room-label {
   font-family: "Fraunces", Georgia, serif; font-weight: 500;
   font-size: 26px; letter-spacing: .12em; text-transform: uppercase; color: var(--text-hi);
