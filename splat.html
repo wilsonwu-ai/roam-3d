@@ -6,19 +6,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" />
 <link rel="stylesheet" href="./css/styles.css" />
 
-<!-- Isolated engine: three@0.160 (mkkellogg peer dep) — never mixed with the r185 house. -->
-<script type="importmap">
-{
-  "imports": {
-    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/",
-    "@mkkellogg/gaussian-splats-3d": "https://cdn.jsdelivr.net/npm/@mkkellogg/gaussian-splats-3d@0.4.7/build/gaussian-splats-3d.module.js"
-  }
-}
-</script>
-
 <style>
   body { background: #05060a; }
+  #splat-frame { position: fixed; inset: 0; width: 100%; height: 100%; border: 0; }
   .splat-topbar {
     position: fixed; top: 0; left: 0; right: 0; z-index: 10;
     display: flex; align-items: center; justify-content: space-between;
@@ -40,16 +30,15 @@
   .splat-card h3 { font-family: "Fraunces", serif; font-weight: 500; font-size: 18px; margin-bottom: 10px; }
   .splat-card p { font-size: 12.8px; line-height: 1.62; color: var(--text-lo); }
   .splat-card .cta { margin-top: 16px; }
-  #splat-loading {
-    position: fixed; inset: 0; z-index: 8;
-    display: flex; align-items: center; justify-content: center; text-align: center;
-    background: radial-gradient(120% 90% at 50% 40%, #0c0e14, #05060a 75%);
-    color: var(--text-lo);
-  }
-  #splat-loading .msg { font-size: 13px; max-width: 42ch; line-height: 1.7; }
   .hint-controls { position: fixed; bottom: 16px; left: 0; right: 0; text-align: center; z-index: 9;
     font-size: 12px; color: var(--text-dim); letter-spacing: .03em; pointer-events: none; }
 </style>
+
+<!-- Real 3D Gaussian Splat, rendered by our OWN self-hosted PlayCanvas SuperSplat viewer
+     (built from the supersplat-viewer fork; splat produced by our splat-transform pipeline).
+     No third-party runtime, no COOP/COEP headers, WebGPU with WebGL fallback. -->
+<iframe id="splat-frame" src="./splat/index.html?noui"
+        allow="fullscreen; xr-spatial-tracking" allowfullscreen></iframe>
 
 <div class="splat-topbar">
   <div class="brand"><div class="glyph">R</div><div class="name">ROAM<b>·</b>3D</div></div>
@@ -61,15 +50,9 @@
 
 <div class="splat-card">
   <div class="tag">About this 3D scan</div>
-  <h3 id="splat-label">3D Gaussian Splat — Sample Capture</h3>
-  <p id="splat-note">This is a real 3D Gaussian Splat rendered live in your browser — a sample scene, not this listing. A photoreal splat of a specific home needs a dense video walkthrough, camera-pose estimation, and GPU training; it can't come from marketing photos.</p>
+  <h3>Real Gaussian Splat — Sample Capture</h3>
+  <p>A <b>real</b> 3D Gaussian Splat rendered live by our own self-hosted PlayCanvas SuperSplat viewer — the same tech behind the viral real-estate flythroughs. This is a <b>sample scene, not this listing</b>: a photoreal splat of a specific home needs a dense video walkthrough (hundreds of overlapping frames), camera-pose estimation, and GPU training. It can't come from marketing photos, so those power the Walk experience instead.</p>
   <a class="btn btn-primary cta" href="./index.html" style="width:100%">← Back to walking the home</a>
 </div>
 
 <div class="hint-controls">Drag to orbit · Scroll to zoom · Right-drag to pan</div>
-
-<div id="splat-loading">
-  <div class="msg">Loading a real Gaussian Splat…<br />first load streams a few MB, please wait a moment.</div>
-</div>
-
-<script type="module" src="./js/splat.js"></script>

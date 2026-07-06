@@ -175,8 +175,8 @@
   "splat": {
     "enabled": true,
     "label": "3D Gaussian Splat — Sample Capture",
-    "src": "https://huggingface.co/cakewalk/splat-data/resolve/main/train.splat",
-    "format": "splat",
+    "src": "./splat/scene.compressed.ply",
+    "format": "compressed.ply",
     "viewer": "./splat.html",
     "note": "This is a REAL 3D Gaussian Splat rendered live in your browser, but of a sample scene, not this listing. A photoreal splat of a specific home requires a dense video walkthrough (hundreds of overlapping frames), camera-pose estimation, and GPU training. It cannot be produced from ~35 marketing photos, so those photos power the Walk experience instead."
   }
